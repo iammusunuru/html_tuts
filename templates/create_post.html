@@ -1,0 +1,23 @@
+<div id="create-div" class="well well-lg container-fluid">
+
+	<div class="alert alert-success" ng-hide="post_status">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	    	<span aria-hidden="true">&times;</span>
+	  	</button>
+	  	<strong>Success!</strong> Done submitting.
+	</div>
+	<div class="col-sm-10 center-block" style="float:none">
+		<div class = "input-style">
+			<h3>Enter Details ..</h3>
+		</div>
+		<div class = "input-style">
+			<input type="text" id="help-title" class="form-control" placeholder="Title" aria-describedby="sizing-addon1" ng-model="title">
+		</div>
+		<div class = "input-style">
+			    <textarea class="form-control" id="help-subject" rows="10" placeholder="Subject" ng-model="subject"></textarea>
+		</div>
+		<div class = "input-style">
+			<button type="button" class="btn btn-success" ng-click="submitPost()">Submit</button>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,136 @@
+
+
+	<!DOCTYPE html>
+<html>
+<head>
+	<title>Help Home</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js">
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js">
+	</script>
+	<style type="text/css">
+
+		#create-div{
+			position: relative;
+			margin:5% 20% 0% 20%;
+
+		}
+		.input-style{
+			position: relative;
+			padding-top: 2%;
+		}
+
+		#filter{
+			position: fixed;
+			display: block;
+			//border-right: solid;
+			//border-color: #808989;
+			//border-size: 2px;
+			height: 90%;
+			width: 20%;
+			background-color: #F9F9E2;
+			word-wrap: break-word;
+			overflow-y: auto;
+
+		}
+
+		tr{
+			cursor: pointer;
+		}
+
+		#posts{
+			position:relative;
+			width:77%;
+			float:right;
+		}
+		body { padding-top: 70px; }
+
+
+
+	</style>
+</head>
+<body ng-app="help-app">
+	<div>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class = "navbar-header">
+		      <a class = "navbar-brand" href = "#/">Help Me</a>
+		 	</div> 
+		    <div>
+		      <ul class = "nav navbar-nav">
+		         <li ><a href = "#view">View</a></li>
+		         <li><a href = "#create">Create</a></li>
+		      </ul>
+		    </div>
+		</nav>	
+	</div>
+
+	<div id="main_body" class="container-fluid">
+		<div ng-view></div>
+	</div>
+
+	<script>
+		var app = angular.module("help-app", ["ngRoute"]);
+		app.config(function($routeProvider) {
+		    $routeProvider
+		    .when("/view", {
+		        templateUrl : "/view",
+		        controller: "post-view-controller"
+		    })
+		    .when("/create", {
+		        templateUrl: "/create",
+		        controller: "create-controller"
+		    });
+		});
+
+		//controller for viewing posts
+		app.controller("post-view-controller", function ($scope, $http) {
+			$scope.posts=[];
+			$scope.showmodel = true;
+			$scope.viewpost = function(){
+				$http.post("/viewpost", {filter:null})
+				.then(function mySucces(response) {
+							console.log(response.data);
+				    		$scope.posts = (response.data);
+					    }, function myError(response) {
+					    	console.log("failed getting values :(");
+				    });
+			};
+			$scope.post_details = function(id){
+				$scope.showmodel = !$scope.showmodel;
+				console.log($scope.showmodel);
+			}
+			$scope.viewpost();
+		});
+
+		app.directive("postdetails",function(){
+			return {
+				template: '<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-'+
+				'labelledby="myLargeModalLabel">'+
+				'<div class="modal-dialog modal-lg" role="document">'+
+				'<div class="modal-content">'+
+				'</div>'+
+				'</div>'+
+				'</div>'
+			}
+		});
+
+
+		//controler for create posts
+		app.controller("create-controller", function ($scope, $http) {
+			$scope.post_status = true;
+			$scope.submitPost = function(){
+				//console.log($scope.title+" "+$scope.subject);
+				$http.post("/createpost", {help_title:$scope.title, help_subject:$scope.subject})
+				.then(function mySucces(response) {
+							$scope.post_status = false;
+				    		console.log("Done inserting data");
+					    }, function myError(response) {
+					    	console.log("insertion failed for some reasons :(");
+				    });
+			};
+		});
+	</script>
+
+</body>
+</html>
